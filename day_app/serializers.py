@@ -3,7 +3,7 @@ from .models import Student
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CsurrentUserDefault())
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Student
