@@ -4,13 +4,13 @@ import os
 from urllib.parse import quote
 from bs4 import BeautifulSoup
 import openpyxl
-from schedule import ScheduleDay, Subject, week_days, GroupSchedule
+from parsers.schedule import ScheduleDay, Subject, week_days, GroupSchedule
 import re
 import json
 
-xlsx_path = 'data/xlsx'
-xlsx_parsed_path = 'data/xlsx_parsed'
-updates_data_file = 'data/updates.json'
+xlsx_path = 'parsers/data/xlsx'
+xlsx_parsed_path = 'parsers/data/xlsx_parsed'
+updates_data_file = 'parsers/data/updates.json'
 
 regex_subject_name = re.compile(r'(?:\к\р\. (.+) \н\.)?(?:(^.+) \н\. )?(.+)')
 
@@ -104,12 +104,9 @@ def parse_xlsx():
                 group_schedule.schedule_days.append(schedule_day)
             group_index += 1
             groups_schedules.append(group_schedule)
-    with open('data/groups_data.json', 'w', encoding='utf8') as f:
-        json.dump(groups_schedules, default=lambda o: o.encode(), indent=4, fp=f, ensure_ascii=False)
+    return groups_schedules
 
 
 def parse_schedule():
     #download_xlsx()
-    parse_xlsx()
-
-    print('schedule parsed')
+    return parse_xlsx()
