@@ -29,7 +29,7 @@ class Teacher(models.Model):
 class Subject(models.Model):
     count = models.IntegerField(null=False)
     schedule_day = models.ForeignKey(ScheduleDay, db_index=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=90, blank=True)
+    name = models.CharField(max_length=90, blank=True, null=True)
     form = models.CharField(max_length=10, blank=True, null=True)
     teacher = models.ForeignKey(Teacher, db_index=True, on_delete=models.CASCADE, null=True)
     audience_name = models.CharField(max_length=10, blank=True, null=True)

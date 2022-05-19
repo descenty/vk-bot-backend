@@ -4,13 +4,14 @@ import os
 from urllib.parse import quote
 from bs4 import BeautifulSoup
 import openpyxl
-from parsers.schedule import ScheduleDay, Subject, week_days, GroupSchedule
+from day_app.parsers.schedule import ScheduleDay, Subject, week_days, GroupSchedule
 import re
-import json
+import pickle
 
-xlsx_path = 'parsers/data/xlsx'
-xlsx_parsed_path = 'parsers/data/xlsx_parsed'
-updates_data_file = 'parsers/data/updates.json'
+
+xlsx_path = 'data/xlsx'
+xlsx_parsed_path = 'data/xlsx_parsed'
+updates_data_file = 'data/updates.json'
 
 regex_subject_name = re.compile(r'(?:\к\р\. (.+) \н\.)?(?:(^.+) \н\. )?(.+)')
 
@@ -104,9 +105,13 @@ def parse_xlsx():
                 group_schedule.schedule_days.append(schedule_day)
             group_index += 1
             groups_schedules.append(group_schedule)
+        break
     return groups_schedules
 
 
 def parse_schedule():
     #download_xlsx()
-    return parse_xlsx()
+    with open('groups_data', 'wb') as f:
+        pickle.dump(parse_xlsx(), f)
+
+parse_schedule()
