@@ -9,6 +9,12 @@ class StudentSerializer(serializers.ModelSerializer):
         model = Student
         fields = '__all__'
 
+    def create(self, validated_data):
+        student_id = validated_data.pop('student_id')
+        study_group = validated_data.pop('study_group')
+        study_group_instance, created = StudyGroup.objects.get_or_create(name=study_group)
+        return Student.objects.create(student_id=student_id, study_group=study_group_instance.name)
+
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,7 +47,8 @@ class ScheduleWeekSerializer(serializers.ModelSerializer):
 class StudyGroupSerializer(serializers.ModelSerializer):
     schedule_weeks = ScheduleWeekSerializer(
         source='scheduleweek_set',
-        many=True
+        many=True,
+        required=False
     )
 
     class Meta:
