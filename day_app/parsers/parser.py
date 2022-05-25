@@ -113,5 +113,3 @@ def parse_schedule():
     #download_xlsx()
     with open('groups_data', 'wb') as f:
         pickle.dump(parse_xlsx(), f)
-
-parse_schedule()

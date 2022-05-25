@@ -7,15 +7,28 @@ from day_app.models import *
 import pickle
 
 
+def load_study_groups():
+    with open('day_app/parsers/groups_data', 'rb') as f:
+        data = pickle.load(f)
+        group_schedules: list[GroupSchedule] = data
+        groups_names = [x.name for x in group_schedules]
+        for name in groups_names:
+            study_group, created = StudyGroup.objects.get_or_create(name=name)
+            if created:
+                study_group.save()
+
+
 def load_study_group(name: str):
+    load_study_groups()
     with open('day_app/parsers/groups_data', 'rb') as f:
         data = pickle.load(f)
         group_schedules: list[GroupSchedule] = data
     if name not in [x.name for x in group_schedules]:
         return False
     base_study_group = [x for x in group_schedules if x.name == name][0]
-    study_group = StudyGroup(name=base_study_group.name)
-    study_group.save()
+    study_group, created = StudyGroup.objects.get_or_create(name=base_study_group.name)
+    if created:
+        study_group.save()
     for schedule_week_count in range(1, 18):
         schedule_week = ScheduleWeek(count=schedule_week_count, study_group=study_group)
         schedule_week.save()
@@ -41,14 +54,12 @@ def load_study_group(name: str):
                             teacher = Teacher.objects.create(name='undefined')
                         else:
                             teacher = Teacher.objects.get(name='undefined')
-                    elif Teacher.objects.filter(name__contains=base_subject.teacher).count() == 0:
-                        teacher = Teacher.objects.create(name=base_subject.teacher)
                     else:
-                        teacher = Teacher.objects.filter(name__contains=base_subject.teacher).first()
+                        teacher, created = Teacher.objects.get_or_create(name=str(base_subject.teacher).replace('\n', ' '))
                     teacher.save()
-                    subject = Subject(name=base_subject.name,
-                                      form=form, teacher=teacher,
-                                      audience_name=base_subject.audience_name,
+                    subject = Subject(name=str(base_subject.name).replace('\n', ' '),
+                                      form=str(form).replace('\n', ' '), teacher=teacher,
+                                      audience_name=str(base_subject.audience_name).replace('\n', ' '),
                                       count=base_subject_count + 1, schedule_day=schedule_day)
                 else:
                     subject = Subject(name=None, count=base_subject_count + 1, schedule_day=schedule_day)

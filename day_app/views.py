@@ -1,7 +1,7 @@
 from django.forms import model_to_dict
 from rest_framework.response import Response
 from .models import Student, ScheduleWeek, ScheduleDay, StudyGroup
-from rest_framework import permissions, generics, viewsets
+from rest_framework import permissions, generics, viewsets, status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import BaseAuthentication, SessionAuthentication
