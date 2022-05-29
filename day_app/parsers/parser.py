@@ -105,7 +105,6 @@ def parse_xlsx():
                 group_schedule.schedule_days.append(schedule_day)
             group_index += 1
             groups_schedules.append(group_schedule)
-        break
     return groups_schedules
 
 
